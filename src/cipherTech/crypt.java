@@ -1,11 +1,13 @@
 package cipherTech;
 
+
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 
@@ -23,47 +25,68 @@ public class crypt {
     public static byte[] crypt(byte[] data, long initialValue) {
 
         int size = data.length;
-        System.out.println("input array size: "+ size);
+        System.out.println("input array size: " + size);
+
+        // array of Strings
+        ArrayList bits = new ArrayList();
+
+        for (int i = 0; i < data.length; i++) {
+            System.out.println("BTEST" + data[i]);
+
+            System.out.println("HELLLOOO" + String.format("%8s", Integer.toBinaryString(data[i])));
+        }
+
+
+
 
         // loop through byte array and convert ascii to binary
         StringBuilder sb = new StringBuilder();
 
-        Short ts = 0X285;
-        System.out.println(Integer.toBinaryString(0xFFFF & ts));
-        String str = ts.toString();
+        int dingle = 0X285;
+        Short ts = 0X41;
 
-        System.out.println("Str Before: ");
-        for (int i =0; i<str.length(); i++){
+        String tss = String.valueOf(ts);
 
-            System.out.print(str.charAt(i)+ " ");
+        long binary;
+
+        try {
+
+            binary = Long.parseLong(tss, 2);
+            System.out.println("hex to bin test:  " + binary);
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
         }
 
+
+        System.out.println("Str Before: ");
+
+        System.out.println();
 
         BitSet bs = BitSet.valueOf(new long[]{ts});
 
         //BitSet bitSet = BitSet.valueOf(LongBuffer.allocate(ts));
 
-        System.out.println("BS Length: "+bs.length());
-        System.out.println("BS empty?: "+bs.isEmpty());
+        System.out.println("BS Length: " + bs.length());
+        System.out.println("BS empty?: " + bs.isEmpty());
 
-        int bsSize= bs.length();
+        int bsSize = bs.length();
 
         System.out.println("PRINT: " + bs);
 
         System.out.println("BS Before: ");
-        for (int i =0; i<bs.length(); i++){
+        for (int i = 0; i < bs.length(); i++) {
 
-            System.out.print(bs.get(i)+ " ");
+            System.out.print(bs.get(i) + " ");
         }
 
         // Calculate XOR variable
-        boolean XOR = bs.get(bs.length()-1) ^ bs.get(bs.length()-3);
+        boolean XOR = bs.get(bs.length() - 1) ^ bs.get(bs.length() - 3);
         System.out.println("XOR equals: " + XOR);
 
         //bs.set(bsSize-1, true);
 
         System.out.println("BS After: ");
-        for (int i =0; i<bs.length(); i++){
+        for (int i = 0; i < bs.length(); i++) {
             System.out.print(bs.get(i) + " ");
         }
         // print out the underlying long array
@@ -71,13 +94,14 @@ public class crypt {
         long[] aLong = bs.toLongArray();
 
         System.out.println(" ");
-        System.out.println("Before: ");
+        System.out.println("dingle Before: ");
 
+        // Decimal 645
         Arrays.stream(aLong).forEach(System.out::println);
 
         // bitset before shift
-        for (int i=0; i <bs.length(); i++){
-            System.out.print(bs.get(i) + " " );
+        for (int i = 0; i < bs.length(); i++) {
+            System.out.print(bs.get(i) + " ");
         }
 
         // loop through along[], shift bits
@@ -88,7 +112,7 @@ public class crypt {
         }
 
         long changed = aLong[0];
-        System.out.println("Long: " + changed);
+        System.out.println("Changed: " + changed);
         BitSet shifted = BitSet.valueOf(new long[]{changed});
 
 
@@ -97,26 +121,27 @@ public class crypt {
 
         Arrays.stream(aLong).forEach(System.out::println);
 
-        for (int i=0; i <shifted.length(); i++){
-            System.out.print(shifted.get(i) + " " );
+
+        for (int i = 0; i < shifted.length(); i++) {
+            System.out.print(shifted.get(i) + " ");
         }
 // clear
-        shifted.clear(shifted.length()-1);
+        shifted.clear(shifted.length() - 1);
         System.out.println("/n");
         System.out.println("Cleared:");
-        for (int i=0; i <shifted.length(); i++){
-            System.out.print(shifted.get(i) + " " );
+        for (int i = 0; i < shifted.length(); i++) {
+            System.out.print(shifted.get(i) + " ");
         }
 
         System.out.println("After XOR:");
 
         shifted.set(0, XOR);
 
-        for (int i=0; i <shifted.length(); i++){
-            System.out.print(shifted.get(i) + " " );
+        for (int i = 0; i < shifted.length(); i++) {
+            System.out.print(shifted.get(i) + " ");
         }
 
-        byte [] input = ByteBuffer.allocate(2).putShort(ts).array();
+        byte[] input = ByteBuffer.allocate(2).putShort(ts).array();
 
 
         for (byte b : input) {
@@ -127,7 +152,7 @@ public class crypt {
                 sb.append(bin);
 
                 System.out.println(bin);
-                System.out.println(bin.charAt(0) +" " + bin.charAt(2) + " xor: " + (bin.charAt(0) ^ bin.charAt(2)) );
+                System.out.println(bin.charAt(0) + " " + bin.charAt(2) + " xor: " + (bin.charAt(0) ^ bin.charAt(2)));
             }
         }
 
@@ -138,21 +163,20 @@ public class crypt {
         long a = Long.parseLong(String.valueOf(test), 2);
 
         // byte array with ascii values
-        byte [] result = ByteBuffer.allocate(8).putLong(a).array();
+        byte[] result = ByteBuffer.allocate(8).putLong(a).array();
 
         System.out.println(new String(result, Charset.defaultCharset()));
 
         System.out.println("LFSR");
         String x = "FFFFFFFF";
 
-        System.out.println("initial: "+x);
+        System.out.println("initial: " + x);
 
         String bin = hexToBin(x);
         System.out.println("Binary: " + bin);
         //int y = Integer.parseInt(bin.trim());
 
         //System.out.println(String.format("%08x", y<<1));
-
 
 
         return result;
@@ -183,6 +207,7 @@ public class crypt {
 
         System.out.println(new String(data, Charset.defaultCharset()));
 
+        //
         long initialValue = 0x12345678;
 
         // Call the Crypt method with parameters
